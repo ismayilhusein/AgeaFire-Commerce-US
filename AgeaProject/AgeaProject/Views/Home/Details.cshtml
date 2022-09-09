@@ -1,0 +1,447 @@
+﻿@model DetailsViewModel
+@{
+    ViewData["Title"] = "Details";
+}
+<div class="breadcrumb-area">
+    <div class="container">
+        <div class="breadcrumb-content">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li class="active">@(Model.Product is object ? Model.Product.Name : "")</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- Li's Breadcrumb Area End Here -->
+<!-- content-wraper start -->
+<style>
+    .drift-zoom-pane.drift-inline {
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+    }
+</style>
+<div class="content-wraper mt-3">
+    <div class="container">
+        <div class="row single-product-area">
+            <div class="col-lg-5 col-md-6">
+                <!-- Product Details Left -->
+                <div class="product-details-left">
+                    <div class="product-details-images slider-navigation-1">
+                        @foreach (var item in Model.Product is object ? Model.Product.SubCategoryCredentials.OrderByDescending(a => a.Id).AsEnumerable() : new List<SubCategoryCredential>())
+                        {
+                            <div class="lg-image" data-id="data">
+                                <img height="500" class="enlarge@(item.Id)" data-zoom="@(Context.Request.Scheme + "://" + Context.Request.Host.Value)/uploads/@item.Src" src="@(Context.Request.Scheme + "://" + Context.Request.Host.Value)/uploads/@item.Src" alt="product image">
+                            </div>
+                        }
+                    </div>
+                    <div class="product-details-thumbs slider-thumbs-1 mt-5">
+                        @foreach (var item in Model.Product is object ? Model.Product.SubCategoryCredentials.OrderByDescending(a => a.Id).AsEnumerable() : new List<SubCategoryCredential>())
+                        {
+                            <div class="sm-image">
+                                <img width="250" class="post-img" height="110" data-product-image data-zoom="@(Context.Request.Scheme + "://" + Context.Request.Host.Value)/uploads/@item.Src" src="@(Context.Request.Scheme + "://" + Context.Request.Host.Value)/uploads/@item.Src" alt="product image thumb">
+                            </div>
+                        }
+                    </div>
+                </div>
+                <!--// Product Details Left -->
+            </div>
+
+            <div class="col-lg-7 col-md-6">
+                <div class="product-details-view-content sp-normal-content pt-60">
+                    <div class="product-info">
+                        <h2 class="post-title">@(Model.Product is object ? Model.Product.Name : "")</h2>
+                        <h4">@(Model.Product is object ? Model.Product.SKU : "")</h4">
+                        <br />
+                        <span class="product-details-ref">@(Model.Product is object ? Model.Product.Category.Name : "")</span>
+                        @if (Model.Product is object)
+                        {
+                            if (Model.Product.Price > 0)
+                            {
+                                <div class="price-box pt-20">
+                                    <span class="new-price new-price-2">$@Model.Product.Price</span>
+                                </div>
+                            }
+                        }
+
+                        <div class="product-desc">
+                            <p>
+                                <span>
+                                    @(Model.Product is object ? Html.Raw(Model.Product.Desc) : Html.Raw("<p></p>"))
+                                </span>
+                            </p>
+                        </div>
+                        @if (Model.Product is object)
+                        {
+                            @if (Model.Product.Brand is object)
+                            {
+                                <div class="product-desc">
+                                    <h5>Brands</h5>
+                                    <p>
+                                        <span>
+                                            @Model.Product.Brand
+                                        </span>
+                                    </p>
+
+
+                                </div>
+                            }
+                        }
+                        @if (Model.Product is object)
+                        {
+                            @if (Model.Product.Size is object)
+                            {
+                                <div class="product-desc">
+                                    <h5>Sizes</h5>
+                                    <p>
+                                        <span style="font-size:large">
+                                            @foreach (var item in Model.Product.Size.Split(","))
+                                            {
+                                                <span class="badge badge-primary">@item</span>
+                                            }
+                                        </span>
+                                    </p>
+
+
+                                </div>
+                            }
+                        }
+                        <div class="single-add-to-cart">
+                            <form action="#" class="cart-quantity">
+                                <button class="add-to-cart add-cart" data-id="@(Model.Product is object ? Model.Product.Id : 0)" >Add to cart</button>
+                            </form>
+                        </div>
+                        <div class="product-additional-info mb-3">
+                            <div class="product-social-sharing">
+                                <ul class="social-link-details">
+                                    <li class="facebook"><a style="cursor: pointer; color: white"><i class="fa fa-facebook"></i>Facebook</a></li>
+                                    <li class="twitter"><a style="cursor: pointer;color:white"><i class="fa fa-twitter"></i>Twitter</a></li>
+                                    <li class="pinterest" style="background-color:firebrick;"><a style="cursor: pointer; color: white"><i class="fa fa-pinterest"></i>Pinterest</a></li>
+                                    <li class="linkedin" style="background-color:dodgerblue"><a style="cursor: pointer; color: white"><i class="fa fa-linkedin"></i>Linkedin</a></li>
+                                    <li class="whatsapp" style="background-color:forestgreen"><a style="cursor: pointer; color: white"><i class="fa fa-whatsapp"></i>Whatsapp</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @if (Model.Product is object)
+            {
+                @if (Model.Product.Tags is object)
+                {
+                    <div class="col-lg-5 col-md-6">
+                        <div class="sidebar-categores-box mb-sm-0">
+                            <div class="sidebar-title">
+                                <h2>@Model.Product.Name #Tags</h2>
+                            </div>
+                            <div class="category-tags">
+                                <ul>
+                                    @foreach (var item in Model.Product.Tags.Split(","))
+                                    {
+                                        <li><a href="# ">@item</a></li>
+                                    }
+                                </ul>
+                            </div>
+                            <!-- category-sub-menu end -->
+                        </div>
+                    </div>
+                }
+            }
+
+        </div>
+    </div>
+</div>
+<!-- content-wraper end -->
+<!-- Begin Product Area -->
+<div class="product-area pt-40">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="li-product-tab">
+                    <ul class="nav li-product-menu">
+                        <li><a class="active" data-toggle="tab" href="#description"><span>Description</span></a></li>
+                        <li><a data-toggle="tab" href="#product-details"><span>Product Details</span></a></li>
+                    </ul>
+                </div>
+                <!-- Begin Li's Tab Menu Content Area -->
+            </div>
+        </div>
+        <div class="tab-content">
+            <div id="description" class="tab-pane active show" role="tabpanel">
+                <div class="product-description">
+                    <span>@(Model.Product is object ? Html.Raw(Model.Product.Desc) : Html.Raw("<p></p>"))</span>
+                </div>
+            </div>
+            <div id="product-details" class="tab-pane" role="tabpanel">
+                <div class="product-details-manufacturer">
+                    <p><span>Category: </span> @(Model.Product is object ? Model.Product.Category.Name :"")</p>
+                </div>
+                <div class="product-details-manufacturer">
+                    <div class="row mb-1 mt-1">
+                        <div class="col-12">
+                            <h4>Options</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-7 col-md-6">
+                            <ul class="list-group">
+                                @if (Model.Product is object)
+                                {
+                                    @if (Model.Product.Options is object)
+                                    {
+                                        @foreach (var item in Model.Product.Options.Split(","))
+                                        {
+                                            <li class="list-group-item">@item</li>
+                                        }
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Product Area End Here -->
+<!-- Begin Li's Laptop Product Area -->
+@if (Model.ProductsInCategories is object)
+{
+    @if (Model.ProductsInCategories.Count > 0)
+    {
+        <section class="product-area li-laptop-product pt-30 pb-50">
+            <div class="container">
+                <div class="row">
+                    <!-- Begin Li's Section Area -->
+                    <div class="col-lg-12">
+                        <div class="li-section-title">
+                            <h2>
+                                <span>@Model.ProductsInCategories.Count other products in the same category:</span>
+                            </h2>
+                        </div>
+                        <div class="row">
+                            <div class="product-active owl-carousel">
+                                @foreach (var item in Model.ProductsInCategories)
+                                {
+                                    <div class="col-lg-12">
+                                        <!-- single-product-wrap start -->
+                                        <div class="single-product-wrap">
+                                            <div class="product-image">
+                                                <a asp-action="Details" asp-controller="Home" asp-route-id="@item.Id">
+                                                    <img src="~/uploads/@(item.SubCategoryCredentials is object ? item.SubCategoryCredentials.FirstOrDefault() is object? item.SubCategoryCredentials.FirstOrDefault().Src:"":"")" alt="Product Image">
+                                                </a>
+                                            </div>
+                                            <div class="product_desc">
+                                                <div class="product_desc_info">
+                                                    <div class="product-review">
+                                                        <h5 class="manufacturer">
+                                                            <a asp-action="Details" asp-controller="Home" asp-route-id="@item.Id">@item.Category.Name</a>
+                                                        </h5>
+                                                    </div>
+                                                    <h4><a class="product_name" asp-action="Details" asp-controller="Home" asp-route-id="@item.Id">@item.Name</a></h4>
+                                                    @if (item.Price > 0)
+                                                    {
+                                                        <div class="price-box">
+                                                            <span class="new-price">$@item.Price</span>
+                                                        </div>
+                                                    }
+                                                </div>
+                                                <div class="add-actions">
+                                                    <ul class="add-actions-link">
+                                                        <li class="add-cart active"><a data-id="@item.Id" href="#">Add to cart</a></li>
+                                                        <li class="add-wishlist"><a data-id="@item.Id" class="links-details" href="#"><i class="fa fa-heart-o"></i></a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- single-product-wrap end -->
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Li's Section Area End Here -->
+                </div>
+            </div>
+        </section>
+    }
+
+}
+@section Scripts{
+    <script>
+        (function () {
+            var images = $('.lg-image')
+
+            for (var i = 0; i < images.length; i++) {
+                console.log(images[i].childNodes[3])
+                new Drift(document.querySelector(`.${images[i].childNodes[1].className}`), {
+                    zoomFactor: 2,
+                    inlinePane: true
+                });
+            }
+        })()
+    </script>
+    <script>
+        const facebookBtn = document.querySelector(".facebook a");
+        const twitterBtn = document.querySelector(".twitter a");
+        const pinterestBtn = document.querySelector(".pinterest a");
+        const linkedinBtn = document.querySelector(".linkedin a");
+        const whatsappBtn = document.querySelector(".whatsapp a");
+
+        function init() {
+            const pinterestImg = document.querySelector(".post-img");
+
+            let postUrl = encodeURI(document.location.href);
+            let postTitle = encodeURI($(".post-title").text());
+            let postImg = encodeURI(pinterestImg.src);
+
+            facebookBtn.setAttribute(
+                "href",
+                `https://www.facebook.com/sharer.php?u=${postUrl}`
+            );
+
+            twitterBtn.setAttribute(
+                "href",
+                `https://twitter.com/share?url=${postUrl}&text=${postTitle}`
+            );
+
+            pinterestBtn.setAttribute(
+                "href",
+                `https://pinterest.com/pin/create/bookmarklet/?media=${postImg}&url=${postUrl}&description=${postTitle}`
+            );
+
+            linkedinBtn.setAttribute(
+                "href",
+                `https://www.linkedin.com/shareArticle?url=${postUrl}&title=${postTitle}`
+            );
+
+            whatsappBtn.setAttribute(
+                "href",
+                `https://wa.me/?text=${postTitle} ${postUrl}`
+            );
+        }
+
+        init();
+    </script>
+    <script>
+        ClickCartInit()
+        function ClickCartInit() {
+            $(document).on('click', '.add-to-cart',function (e) {
+                e.preventDefault()
+                var id = $(this).attr('data-id');
+                if (id) {
+                    $.get("@Url.Action("GetShopItem","Home")/" + id, function (data) {
+                    Swal.fire(
+                        'Added to Cart!'
+                    )
+                    if (!localStorage.getItem("shoping-keys")) {
+                        localStorage.setItem("shoping-keys", id)
+                        $('.hm-minicart .minicart-product-list').empty();
+                        var item = `<li id="li${id}">
+                                                    <a href="/home/details/${id}" class="minicart-product-image">
+                                                        <img src="@(Context.Request.Scheme + "://" + Context.Request.Host.Value)/uploads/${data.subCategoryCredentials ? data.subCategoryCredentials[0].src : ""}" alt="cart products">
+                                                    </a>
+                                                    <div class="minicart-product-details">
+                                                        <h6><a href="/home/details/${id}">${data.name}</a></h6>
+                                                        <span class="shop-item-price" data-price="${data.price}" data-count="${1}">$${data.price} x 1</span>
+                                                    </div>
+                                                    <a class="shop-item-close" data-id="${id}">
+                                                        <i class="fa fa-close"></i>
+                                                    </a>
+                                                </li>`;
+                        $('.hm-minicart .minicart-product-list').append(item);
+
+                        var price = 0;
+                        var unitCount = 0;
+                        if (localStorage.getItem("shoping-keys-price")) {
+                           price = parseFloat(localStorage.getItem("shoping-keys-price"))
+                        }
+                        if (localStorage.getItem("shoping-keys-count")) {
+                            unitCount =  parseInt(localStorage.getItem("shoping-keys-count"))
+                        }
+                        var newPrice = price + data.price
+                        var newUnitCount = unitCount + 1;
+                        $('.shop-price-icon').html(`$${newPrice}<span class="cart-item-count">${newUnitCount}</span>`)
+                        $('.shop-price-banner').text(`$${newPrice}`)
+                        localStorage.setItem("shoping-keys-price", newPrice)
+                        localStorage.setItem("shoping-keys-count", newUnitCount)
+                    }
+                    else {
+                        console.log('else state')
+                        var keysString = localStorage.getItem("shoping-keys");
+                        var keys = keysString.split(",");
+                        var exists = keys.includes(id);
+                        if (exists) {
+                            localStorage.setItem("shoping-keys", keysString + "," + id)
+                            keysString = keysString + "," + id;
+                            keys = keysString.split(",");
+                            var number = keys.filter(x => x === id).length
+                            var item = ` <a href="/home/details/${id}" class="minicart-product-image">
+                                                        <img src="@(Context.Request.Scheme + "://" + Context.Request.Host.Value)/uploads/${data.subCategoryCredentials ? data.subCategoryCredentials[0].src : ""}" alt="cart products">
+                                                    </a>
+                                                    <div class="minicart-product-details">
+                                                        <h6><a href="/home/details/${id}">${data.name}</a></h6>
+                                                        <span class="shop-item-price" data-price="${data.price}" data-count="${number}" >$${data.price} x ${number}</span>
+                                                    </div>
+                                                    <a class="shop-item-close" data-id="${id}">
+                                                        <i class="fa fa-close"></i>
+                                                    </a>`;
+                            $("#li" + id).html(item);
+                            var price = 0;
+                            var unitCount = 0;
+                            if (localStorage.getItem("shoping-keys-price")) {
+                                price = parseFloat(localStorage.getItem("shoping-keys-price"))
+                            }
+                            if (localStorage.getItem("shoping-keys-count")) {
+                                unitCount = parseInt(localStorage.getItem("shoping-keys-count"))
+                            }
+                            var newPrice = price + data.price
+                            var newUnitCount = unitCount + 1;
+                            $('.shop-price-icon').html(`$${newPrice}<span class="cart-item-count">${newUnitCount}</span>`)
+                            $('.shop-price-banner').text(`$${newPrice}`)
+                            localStorage.setItem("shoping-keys-price", newPrice)
+                            localStorage.setItem("shoping-keys-count", newUnitCount)
+                        }
+                        else {
+                            var keysString = localStorage.getItem("shoping-keys");
+                            localStorage.setItem("shoping-keys", keysString + "," + id)
+                            var item = `<li id="li${id}">
+                                                    <a href="/home/details/${id}" class="minicart-product-image">
+                                                        <img src="@(Context.Request.Scheme + "://" + Context.Request.Host.Value)/uploads/${data.subCategoryCredentials ? data.subCategoryCredentials[0].src : ""}" alt="cart products">
+                                                    </a>
+                                                    <div class="minicart-product-details">
+                                                        <h6><a href="/home/details/${id}">${data.name}</a></h6>
+                                                        <span class="shop-item-price" data-price="${data.price}" data-count="${1}">$${data.price} x 1</span>
+                                                    </div>
+                                                    <a class="shop-item-close" data-id="${id}">
+                                                        <i class="fa fa-close"></i>
+                                                    </a>
+                                                </li>`;
+                            $('.hm-minicart .minicart-product-list').append(item);
+                            var price = 0;
+                            var unitCount = 0;
+                            if (localStorage.getItem("shoping-keys-price")) {
+                                price = parseFloat(localStorage.getItem("shoping-keys-price"))
+                            }
+                            if (localStorage.getItem("shoping-keys-count")) {
+                                unitCount = parseInt(localStorage.getItem("shoping-keys-count"))
+                            }
+                            var newPrice = price + data.price
+                            var newUnitCount = unitCount + 1;
+                            $('.shop-price-icon').html(`$${newPrice}<span class="cart-item-count">${newUnitCount}</span>`)
+                            $('.shop-price-banner').text(`$${newPrice}`)
+                            localStorage.setItem("shoping-keys-price", newPrice)
+                            localStorage.setItem("shoping-keys-count", newUnitCount)
+                        }
+
+                    }
+
+                })
+                }
+
+                })
+        }
+    </script>
+}
